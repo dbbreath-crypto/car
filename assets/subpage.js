@@ -53,10 +53,19 @@
   function setSubActive(id) {
     subLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id));
   }
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
+  // 页内锚点（含指向本页的 xxx.html#hash 链接，如「加入我们」→ contact.html#form）
+  const selfPage = (location.pathname.split('/').pop() || 'index.html');
+  document.querySelectorAll('a[href*="#"]').forEach(a => {
     a.addEventListener('click', (e) => {
-      const id = a.getAttribute('href');
-      if (id === '#' || id.length < 2) return;
+      let id = a.getAttribute('href');
+      if (!id || id === '#') return;
+      if (!id.startsWith('#')) {
+        // 跨页链接：不是本页则交给浏览器正常跳转
+        const [file, hash] = id.split('#');
+        if (!hash || file !== selfPage) return;
+        id = '#' + hash;
+      }
+      if (id.length < 2) return;
       const el = document.querySelector(id);
       if (!el) return;
       e.preventDefault();
