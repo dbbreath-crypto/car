@@ -29,7 +29,7 @@ nav { position: fixed; top:0; left:0; right:0; z-index: 1000; padding: 28px 0; t
 nav.scrolled { background: var(--yellow); padding: 16px 0; }
 .nav-inner { max-width: var(--max); margin:0 auto; padding: 0 40px; display:flex; align-items:center; justify-content:space-between; }
 .nav-logo { display:flex; align-items:center; }
-.nav-logo img { height:44px; width:auto; border-radius:4px; }
+.nav-logo img { height:51px; width:auto; border-radius:4px; }
 .nav-links { display:flex; gap:32px; list-style:none; }
 .nav-links a { font-size:14px; color: var(--black); letter-spacing:.06em; position:relative; padding:4px 0; transition: color .3s; }
 .nav-links a::after { content:''; position:absolute; left:0; bottom:0; width:0; height:2px; background: var(--black); transition: width .35s var(--ease); }
