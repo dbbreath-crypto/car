@@ -90,7 +90,9 @@
     font-weight:700; font-size:13px; letter-spacing:.05em;
     box-shadow: 0 10px 30px rgba(0,0,0,.22);
     transition: all .4s var(--ease);
+    opacity:0; pointer-events:none; transform:translateY(16px);
   }
+  .m-contact.show { opacity:1; pointer-events:auto; transform:translateY(0); }
   .m-contact:hover { background: var(--yellow); color: var(--black); }
   .m-contact:active { transform: scale(.94); }
   .nav-burger span { display:block; width:24px; height:2px; background:var(--black); margin:6px 0; border-radius:2px; transition: all .4s var(--ease); }
@@ -807,6 +809,8 @@
     progress.style.width = (st / h * 100) + '%';
     nav.classList.toggle('scrolled', st > 60);
     toTop.classList.toggle('show', st > 600);
+    var mContact = document.querySelector('.m-contact');
+    if (mContact) mContact.classList.toggle('show', st > 600);
     // hero parallax
     if (st < window.innerHeight) {
       heroBg.style.transform = 'translateY(' + st * 0.35 + 'px) scale(1.06)';
