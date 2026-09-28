@@ -81,16 +81,17 @@
   .nav-cta:hover { transform: translateY(-2px); background: #000; }
   .nav-burger { display:none; background:none; border:none; cursor:pointer; padding:6px; }
   .nav-m-right { display:none; align-items:center; gap:12px; }
-  .nav-cta-m {
-    display:none; align-items:center;
-    background: transparent; color: var(--black); font-weight: 700;
-    border: 1.5px solid var(--black);
-    font-size: 12px; letter-spacing:.08em;
-    padding: 4px 12px; border-radius: 999px;
-    transition: all .3s var(--ease);
+  /* H5 底部纯文字合作入口（toTop 上方） */
+  .m-contact {
+    display:none; position:fixed; right:34px; bottom:100px; z-index:900;
+    color: var(--black); font-weight: 700; font-size: 14px; letter-spacing:.14em;
+    writing-mode: horizontal-tb;
   }
-  .nav-cta-m:active { transform: scale(.96); }
-  .nav-cta-m:hover { background: var(--black); color: #fff; }
+  .m-contact::after {
+    content:''; display:block; height:3px; margin-top:3px;
+    background: var(--yellow); border-radius:2px;
+  }
+  .m-contact:hover { opacity:.7; }
   .nav-burger span { display:block; width:24px; height:2px; background:var(--black); margin:6px 0; border-radius:2px; transition: all .4s var(--ease); }
   .nav-burger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
   .nav-burger.open span:nth-child(2) { opacity:0; }
@@ -434,8 +435,8 @@
     .container { padding: 0 24px; }
     .nav-links { display:none; }
     .nav-cta { display:none; }
-    .nav-cta-m { display:inline-flex; }
     .nav-m-right { display:flex; }
+    .m-contact { display:block; }
     .nav-burger { display:block; }
     nav { padding: 18px 0; }
     nav.scrolled { padding: 12px 0; }
@@ -471,7 +472,6 @@
     </ul>
     <a href="#contact" class="nav-cta">合作咨询</a>
     <div class="nav-m-right">
-      <a href="#contact" class="nav-cta-m">合作</a>
       <button class="nav-burger" id="burger" aria-label="菜单">
         <span></span><span></span><span></span>
       </button>
@@ -790,6 +790,7 @@
   </div>
 </footer>
 
+<a href="#contact" class="m-contact">合作</a>
 <button id="toTop" title="回到顶部">↑</button>
 
 <script>
