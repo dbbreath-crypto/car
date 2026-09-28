@@ -81,17 +81,18 @@
   .nav-cta:hover { transform: translateY(-2px); background: #000; }
   .nav-burger { display:none; background:none; border:none; cursor:pointer; padding:6px; }
   .nav-m-right { display:none; align-items:center; gap:12px; }
-  /* H5 底部纯文字合作入口（toTop 上方） */
+  /* H5 底部圆形合作入口（toTop 上方，与 TOP 同款样式） */
   .m-contact {
-    display:none; position:fixed; right:34px; bottom:100px; z-index:900;
-    color: var(--black); font-weight: 700; font-size: 14px; letter-spacing:.14em;
-    writing-mode: horizontal-tb;
+    display:none; position:fixed; right:32px; bottom:100px; z-index:900;
+    width:52px; height:52px; border-radius:50%;
+    background: var(--black); color:#fff;
+    align-items:center; justify-content:center;
+    font-weight:700; font-size:13px; letter-spacing:.05em;
+    box-shadow: 0 10px 30px rgba(0,0,0,.22);
+    transition: all .4s var(--ease);
   }
-  .m-contact::after {
-    content:''; display:block; height:3px; margin-top:3px;
-    background: var(--yellow); border-radius:2px;
-  }
-  .m-contact:hover { opacity:.7; }
+  .m-contact:hover { background: var(--yellow); color: var(--black); }
+  .m-contact:active { transform: scale(.94); }
   .nav-burger span { display:block; width:24px; height:2px; background:var(--black); margin:6px 0; border-radius:2px; transition: all .4s var(--ease); }
   .nav-burger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
   .nav-burger.open span:nth-child(2) { opacity:0; }
@@ -436,7 +437,7 @@
     .nav-links { display:none; }
     .nav-cta { display:none; }
     .nav-m-right { display:flex; }
-    .m-contact { display:block; }
+    .m-contact { display:flex; }
     .nav-burger { display:block; }
     nav { padding: 18px 0; }
     nav.scrolled { padding: 12px 0; }
