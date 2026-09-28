@@ -471,10 +471,12 @@
       <div class="name">有车网<small>YOUCHEWANG</small></div>
     </a>
     <ul class="nav-links">
+      <li><a href="#top" class="active">首页</a></li>
       <li><a href="about.html">关于有车网</a></li>
       <li><a href="join.html">加盟体系</a></li>
       <li><a href="store.html">门店体系</a></li>
       <li><a href="hq.html">总部赋能体系</a></li>
+      <li><a href="contact.html">合作咨询</a></li>
     </ul>
     <a href="contact.html" class="nav-cta">合作咨询</a>
     <div class="nav-m-right">
@@ -842,11 +844,8 @@
     requestAnimationFrame(step);
   }
 
-  // 导航/页内锚点：缓慢滚动 + 固定导航偏移
-  const navAnchors = [...document.querySelectorAll('.nav-links a[href^="#"]')];
-  function setActive(id) {
-    navAnchors.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id));
-  }
+  // 页内锚点：缓慢滚动 + 固定导航偏移
+  // 注：顶部导航已全部改为独立页面链接，「首页」项静态常亮，不做滚动高亮
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', (e) => {
       const id = a.getAttribute('href');
@@ -854,7 +853,6 @@
       const el = document.querySelector(id);
       if (!el) return;
       e.preventDefault();
-      setActive(id);
       const navH = document.getElementById('nav').offsetHeight;
       const y = id === '#top' ? 0 : el.getBoundingClientRect().top + window.scrollY - navH - 12;
       smoothScrollTo(Math.max(0, y), 1400);
@@ -877,28 +875,6 @@
       document.body.style.overflow = '';
     });
   });
-
-  // scrollspy：滚动到哪个板块，对应菜单高亮
-  const spySections = ['about', 'chance', 'models', 'ops', 'empower']
-    .map(id => document.getElementById(id)).filter(Boolean);
-  let spyTicking = false;
-  function updateSpy() {
-    spyTicking = false;
-    const navH = document.getElementById('nav').offsetHeight + 140;
-    const pos = window.scrollY + navH;
-    let currentId = '';
-    spySections.forEach(sec => {
-      if (pos >= sec.offsetTop) currentId = '#' + sec.id;
-    });
-    // 已滚过所有板块则高亮最后一个
-    const docBottom = document.documentElement.scrollHeight - window.innerHeight;
-    if (window.scrollY >= docBottom - 4 && spySections.length) currentId = '#' + spySections[spySections.length - 1].id;
-    navAnchors.forEach(a => a.classList.toggle('active', a.getAttribute('href') === currentId));
-  }
-  window.addEventListener('scroll', () => {
-    if (!spyTicking) { spyTicking = true; requestAnimationFrame(updateSpy); }
-  }, { passive: true });
-  updateSpy();
 
   // reveal on scroll
   const io = new IntersectionObserver((entries) => {
