@@ -85,7 +85,9 @@
   .hero-tags span { border:1px solid rgba(255,255,255,.28); border-radius:999px; padding:8px 20px; font-size:12.5px; letter-spacing:.16em; color: rgba(255,255,255,.85); }
 
   /* sub nav */
-  .subnav { position: sticky; top: 0; z-index: 900; background: rgba(255,255,255,.94); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom:1px solid var(--line); }
+  .subnav { position: sticky; top: var(--navH, 76px); z-index: 900; background: rgba(255,255,255,.94); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom:1px solid var(--line); }
+  /* 锚点跳转兜底：预留主导航 + 二级导航高度 */
+  section[id] { scroll-margin-top: calc(var(--navH, 76px) + 64px); }
   .subnav-inner { max-width: var(--max); margin:0 auto; padding: 0 40px; display:flex; gap:38px; overflow-x:auto; }
   .subnav a { font-size:14px; color: var(--grey); padding: 24px 0; white-space:nowrap; position:relative; transition: color .3s; letter-spacing:.06em; }
   .subnav a::after { content:''; position:absolute; left:0; right:0; bottom:0; height:3px; background: var(--yellow); transform: scaleX(0); transition: transform .35s var(--ease); }
@@ -654,6 +656,12 @@
   const toTop = document.getElementById('toTop');
   const mContact = document.querySelector('.m-contact');
 
+  // 同步主导航实际高度到 CSS 变量，供二级导航吸顶定位
+  function syncNavH() {
+    const h = nav.offsetHeight;
+    if (h) document.documentElement.style.setProperty('--navH', h + 'px');
+  }
+
   function onScroll() {
     const st = window.scrollY;
     const h = document.documentElement.scrollHeight - window.innerHeight;
@@ -661,9 +669,12 @@
     nav.classList.toggle('scrolled', st > 60);
     toTop.classList.toggle('show', st > 600);
     if (mContact) mContact.classList.toggle('show', st > 600);
+    syncNavH();
   }
   window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', syncNavH);
   onScroll();
+  syncNavH();
 
   function smoothScrollTo(targetY, duration = 1300) {
     const startY = window.scrollY, diff = targetY - startY, t0 = performance.now();
@@ -690,7 +701,8 @@
       if (!el) return;
       e.preventDefault();
       setSubActive(id);
-      const offset = document.getElementById('subnav').offsetHeight + 12;
+      // 偏移 = 固定主导航 + 吸顶二级导航 + 间距，避免标题被遮挡
+      const offset = nav.offsetHeight + document.getElementById('subnav').offsetHeight + 16;
       const y = el.getBoundingClientRect().top + window.scrollY - offset;
       smoothScrollTo(Math.max(0, y), 1400);
       history.replaceState(null, '', id);
@@ -703,7 +715,8 @@
   let ticking = false;
   function updateSpy() {
     ticking = false;
-    const pos = window.scrollY + document.getElementById('subnav').offsetHeight + 160;
+    const subnavH = document.getElementById('subnav').offsetHeight;
+    const pos = window.scrollY + nav.offsetHeight + subnavH + 80;
     let cur = '';
     spy.forEach(sec => { if (pos >= sec.offsetTop) cur = '#' + sec.id; });
     const bottom = document.documentElement.scrollHeight - window.innerHeight;
@@ -715,11 +728,16 @@
   }, { passive: true });
   updateSpy();
 
-  // reveal
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  // reveal（支持 prefers-reduced-motion 或 ?noanim：直接显示，跳过渐显）
+  const noAnim = matchMedia('(prefers-reduced-motion: reduce)').matches || location.search.includes('noanim');
+  if (noAnim) {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+  } else {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  }
 
   // 移动端菜单
   const burger = document.getElementById('burger');
